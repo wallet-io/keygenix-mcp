@@ -114,13 +114,27 @@ Signed transaction returned
 
 ---
 
+## Without MCP (CLI)
+
+For scripting, debugging, or direct integration — no AI client needed:
+
+```bash
+cd cli
+npm install
+cp .env.example .env   # fill in your keys
+node client.js list-keys
+```
+
+See [`cli/README.md`](cli/README.md) for full command reference.
+
+---
+
 ## Development
 
 ```bash
-git clone https://github.com/keygenix/keygenix-mcp
+git clone https://github.com/onezerotrace/keygenix-mcp
 cd keygenix-mcp
 npm install
-cp .env.example .env   # fill in your keys
 npm run build
 npm start
 ```
@@ -131,9 +145,9 @@ npm start
 
 | Channel | Command |
 |---------|---------|
-| npm | `npx keygenix-mcp` |
+| GitHub | `npm install github:onezerotrace/keygenix-mcp` |
+| npm _(coming soon)_ | `npx keygenix-mcp` |
 | OpenClaw | `clawhub install keygenix` |
-| GitHub | `npx skills add keygenix/keygenix-mcp` |
 | Smithery | [smithery.ai/server/keygenix](https://smithery.ai) |
 
 ---
@@ -142,4 +156,4 @@ npm start
 
 - Website: [keygenix.pro](https://keygenix.pro)
 - API Docs: [keygenix.pro/docs.html](https://keygenix.pro/docs.html)
-- Issues: [github.com/keygenix/keygenix-mcp/issues](https://github.com/keygenix/keygenix-mcp/issues)
+- Issues: [github.com/onezerotrace/keygenix-mcp/issues](https://github.com/onezerotrace/keygenix-mcp/issues)
