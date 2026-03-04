@@ -19,7 +19,7 @@ Private keys are generated, stored, and used exclusively inside a **Trusted Exec
 
 ```bash
 # Use the CLI to generate keypairs (easiest)
-git clone https://github.com/onezerotrace/keygenix-skill
+git clone https://github.com/wallet-io/keygenix-skill
 cd keygenix-skill/cli && npm install
 
 node client.js keygen   # → copy publicKey as API Auth Key
@@ -123,7 +123,7 @@ Signed transaction returned
 ## Development
 
 ```bash
-git clone https://github.com/onezerotrace/keygenix-mcp
+git clone https://github.com/wallet-io/keygenix-mcp
 cd keygenix-mcp
 npm install
 npm run build
@@ -136,7 +136,7 @@ npm start
 
 | Channel | Command |
 |---------|---------|
-| GitHub | `npm install github:onezerotrace/keygenix-mcp` |
+| GitHub | `npm install github:wallet-io/keygenix-mcp` |
 | npm _(coming soon)_ | `npx keygenix-mcp` |
 | OpenClaw | `clawhub install keygenix` |
 | Smithery | [smithery.ai/server/keygenix](https://smithery.ai) |
@@ -147,5 +147,5 @@ npm start
 
 - Website: [keygenix.pro](https://keygenix.pro)
 - API Docs: [keygenix.pro/docs.html](https://keygenix.pro/docs.html)
-- Skill + CLI: [onezerotrace/keygenix-skill](https://github.com/onezerotrace/keygenix-skill)
-- Issues: [github.com/onezerotrace/keygenix-mcp/issues](https://github.com/onezerotrace/keygenix-mcp/issues)
+- Skill + CLI: [wallet-io/keygenix-skill](https://github.com/wallet-io/keygenix-skill)
+- Issues: [github.com/wallet-io/keygenix-mcp/issues](https://github.com/wallet-io/keygenix-mcp/issues)

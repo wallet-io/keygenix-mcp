@@ -35,10 +35,10 @@
   "homepage": "https://keygenix.pro",
   "repository": {
     "type": "git",
-    "url": "https://github.com/onezerotrace/keygenix-mcp.git"
+    "url": "https://github.com/wallet-io/keygenix-mcp.git"
   },
   "bugs": {
-    "url": "https://github.com/onezerotrace/keygenix-mcp/issues"
+    "url": "https://github.com/wallet-io/keygenix-mcp/issues"
   },
   "files": [
     "dist",
