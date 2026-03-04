@@ -120,21 +120,6 @@ Signed transaction returned
 
 ---
 
-## Without MCP (CLI)
-
-For scripting, debugging, or direct integration — no AI client needed.
-The CLI lives in the [keygenix-skill](https://github.com/onezerotrace/keygenix-skill) repo:
-
-```bash
-git clone https://github.com/onezerotrace/keygenix-skill
-cd keygenix-skill/cli
-npm install
-cp .env.example .env
-node client.js list-keys
-```
-
----
-
 ## Development
 
 ```bash
@@ -162,4 +147,5 @@ npm start
 
 - Website: [keygenix.pro](https://keygenix.pro)
 - API Docs: [keygenix.pro/docs.html](https://keygenix.pro/docs.html)
+- Skill + CLI: [onezerotrace/keygenix-skill](https://github.com/onezerotrace/keygenix-skill)
 - Issues: [github.com/onezerotrace/keygenix-mcp/issues](https://github.com/onezerotrace/keygenix-mcp/issues)
