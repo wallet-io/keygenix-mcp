@@ -16,7 +16,7 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { CallToolRequestSchema, ListToolsRequestSchema, } from "@modelcontextprotocol/sdk/types.js";
 import { keygenTool, handleKeygen } from "./tools/keygen.js";
-import { listKeysTool, getKeyTool, createKeyTool, handleListKeys, handleGetKey, handleCreateKey, } from "./tools/keys.js";
+import { listKeysTool, getKeyTool, updateKeyTool, getPublicKeyTool, createKeyTool, exportKeyTool, handleListKeys, handleGetKey, handleUpdateKey, handleGetPublicKey, handleCreateKey, handleExportKey, } from "./tools/keys.js";
 import { listAddressesTool, createAddressTool, handleListAddresses, handleCreateAddress, } from "./tools/addresses.js";
 import { signTransactionTool, signMessageTool, handleSignTransaction, handleSignMessage, } from "./tools/signing.js";
 import { importKeyTool, handleImportKey } from "./tools/import.js";
@@ -43,7 +43,10 @@ const ALL_TOOLS = [
     keygenTool,
     listKeysTool,
     getKeyTool,
+    updateKeyTool,
+    getPublicKeyTool,
     createKeyTool,
+    exportKeyTool,
     importKeyTool,
     listAddressesTool,
     createAddressTool,
@@ -84,8 +87,17 @@ async function main() {
                 case "get_key":
                     result = await handleGetKey(config, args);
                     break;
+                case "update_key":
+                    result = await handleUpdateKey(config, args);
+                    break;
+                case "get_public_key":
+                    result = await handleGetPublicKey(config, args);
+                    break;
                 case "create_key":
                     result = await handleCreateKey(config, args);
+                    break;
+                case "export_key":
+                    result = await handleExportKey(config, args);
                     break;
                 case "import_key":
                     result = await handleImportKey(config, args);

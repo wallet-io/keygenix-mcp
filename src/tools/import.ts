@@ -80,10 +80,8 @@ export async function handleImportKey(
   if (args.keyType === "mnemonic") {
     keyMaterial = JSON.stringify({ mnemonic: args.mnemonic });
   } else {
-    keyMaterial = JSON.stringify({
-      privateKey: args.privateKey,
-      curve: args.curve ?? "secp256k1",
-    });
+    // API expects field name "key" for private/secret types
+    keyMaterial = JSON.stringify({ key: args.privateKey });
   }
   const encryptedImportingKey = enc.encrypt(keyMaterial, preparedPubKey);
 
@@ -100,6 +98,10 @@ export async function handleImportKey(
     authPubKey,
     preparedPubKey,
   };
+  // curve required for private/secret types
+  if (args.keyType === "private" || args.keyType === "secret") {
+    body.curve = args.curve ?? "secp256k1";
+  }
   if (createAddresses.length > 0) {
     body.createAddresses = createAddresses;
   }

@@ -24,8 +24,8 @@ import type { KeygenixConfig } from "./api-client.js";
 
 import { keygenTool, handleKeygen } from "./tools/keygen.js";
 import {
-  listKeysTool, getKeyTool, createKeyTool,
-  handleListKeys, handleGetKey, handleCreateKey,
+  listKeysTool, getKeyTool, updateKeyTool, getPublicKeyTool, createKeyTool, exportKeyTool,
+  handleListKeys, handleGetKey, handleUpdateKey, handleGetPublicKey, handleCreateKey, handleExportKey,
 } from "./tools/keys.js";
 import {
   listAddressesTool, createAddressTool,
@@ -63,7 +63,10 @@ const ALL_TOOLS = [
   keygenTool,
   listKeysTool,
   getKeyTool,
+  updateKeyTool,
+  getPublicKeyTool,
   createKeyTool,
+  exportKeyTool,
   importKeyTool,
   listAddressesTool,
   createAddressTool,
@@ -122,8 +125,20 @@ async function main() {
           result = await handleGetKey(config, args as { keyCode: string });
           break;
 
+        case "update_key":
+          result = await handleUpdateKey(config, args as { keyCode: string; name?: string; remark?: string });
+          break;
+
+        case "get_public_key":
+          result = await handleGetPublicKey(config, args as { keyCode: string; curve?: string; path?: string; deriveType?: string });
+          break;
+
         case "create_key":
-          result = await handleCreateKey(config, args as { keyType: string; chains?: string[] });
+          result = await handleCreateKey(config, args as { keyType: string; curve?: string; chains?: string[] });
+          break;
+
+        case "export_key":
+          result = await handleExportKey(config, args as { keyCode: string });
           break;
 
         case "import_key":

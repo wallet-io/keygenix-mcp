@@ -19,8 +19,8 @@ export const signTransactionTool = {
       },
       chain: {
         type: "string",
-        enum: ["EVM", "SOL", "SUI", "BTC", "TRX", "TON", "COSMOS", "XRP", "ADA", "APTOS"],
-        description: "Target blockchain. Required for mnemonic keys (enables HD derivation). Omit for private/secret key types.",
+        enum: ["EVM", "SOL"],
+        description: "Transaction category. Only EVM and SOL supported. Required for mnemonic keys. Omit for private/secret key types.",
       },
       chainId: {
         type: "number",
@@ -70,17 +70,20 @@ export const signMessageTool = {
 
 // ─── Chain defaults ───────────────────────────────────────────────────────────
 
+// sign_transaction only supports EVM and SOL (server-side TxCategoryList)
+// sign_message supports any curve — use address derivation paths for non-EVM/SOL
 const CHAIN_DEFAULTS: Record<string, { path: string; curve: string; deriveType: string }> = {
-  EVM:    { path: "m/44'/60'/0'/0/0",    curve: "secp256k1", deriveType: "bip32" },
-  SOL:    { path: "m/44'/501'/0'/0'",    curve: "ed25519",   deriveType: "ed25519-hd-key" },
-  SUI:    { path: "m/44'/784'/0'/0'/0'", curve: "ed25519",   deriveType: "ed25519-hd-key" },
-  BTC:    { path: "m/84'/0'/0'/0/0",     curve: "secp256k1", deriveType: "bip32" },
-  TRX:    { path: "m/44'/195'/0'/0/0",   curve: "secp256k1", deriveType: "bip32" },
-  TON:    { path: "m/44'/607'/0'",       curve: "ed25519",   deriveType: "ed25519-hd-key" },
-  COSMOS: { path: "m/44'/118'/0'/0/0",   curve: "secp256k1", deriveType: "bip32" },
-  XRP:    { path: "m/44'/144'/0'/0/0",   curve: "secp256k1", deriveType: "bip32" },
-  ADA:    { path: "m/1852'/1815'/0'/0/0",curve: "ed25519",   deriveType: "bip32-cardano" },
-  APTOS:  { path: "m/44'/637'/0'/0'/0'", curve: "ed25519",   deriveType: "ed25519-hd-key" },
+  EVM:    { path: "m/44'/60'/0'/0/0",      curve: "secp256k1", deriveType: "bip32" },
+  SOL:    { path: "m/44'/501'/0'/0'/0'",   curve: "ed25519",   deriveType: "ed25519-hd-key" },
+  SUI:    { path: "m/44'/784'/0'/0'/0'",   curve: "ed25519",   deriveType: "ed25519-hd-key" },
+  BTC:    { path: "m/84'/0'/0'/0/0",       curve: "secp256k1", deriveType: "bip32" },
+  TRX:    { path: "m/44'/195'/0'/0/0",     curve: "secp256k1", deriveType: "bip32" },
+  TON:    { path: "m/44'/607'/0'/0'/0'",   curve: "ed25519",   deriveType: "ed25519-hd-key" },
+  COSMOS: { path: "m/44'/118'/0'/0/0",     curve: "secp256k1", deriveType: "bip32" },
+  XRP:    { path: "m/44'/144'/0'/0/0",     curve: "secp256k1", deriveType: "bip32" },
+  ADA:    { path: "m/44'/1815'/0'/0'/0'",  curve: "ed25519",   deriveType: "ed25519-hd-key" },
+  APTOS:  { path: "m/44'/637'/0'/0'/0'",   curve: "ed25519",   deriveType: "ed25519-hd-key" },
+  SEI:    { path: "m/44'/19000118'/0'/0/0", curve: "secp256k1", deriveType: "bip32" },
 };
 
 // ─── Handlers ─────────────────────────────────────────────────────────────────
