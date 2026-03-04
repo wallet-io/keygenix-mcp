@@ -19,8 +19,14 @@ Private keys are generated, stored, and used exclusively inside a **Trusted Exec
 4. Generate two keypairs (run once):
 
 ```bash
-npx keygenix-mcp keygen   # API Auth keypair
-npx keygenix-mcp keygen   # AuthKey keypair (separate)
+# Install first
+npm install github:onezerotrace/keygenix-mcp
+
+# Generate API Auth keypair
+node node_modules/keygenix-mcp/dist/index.js   # then call keygen tool
+
+# Or use the CLI (no MCP needed)
+# See: https://github.com/onezerotrace/keygenix-skill/tree/main/cli
 ```
 
 5. Register both **public keys** in the Keygenix dashboard.
@@ -35,8 +41,8 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json`:
 {
   "mcpServers": {
     "keygenix": {
-      "command": "npx",
-      "args": ["keygenix-mcp"],
+      "command": "node",
+      "args": ["/path/to/node_modules/keygenix-mcp/dist/index.js"],
       "env": {
         "KEYGENIX_API_PRIV_KEY": "your-api-auth-private-key-hex",
         "KEYGENIX_AUTH_PRIV_KEY": "your-authkey-private-key-hex",
@@ -48,6 +54,8 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json`:
 }
 ```
 
+> Once published to npm, replace with `"command": "npx", "args": ["keygenix-mcp"]`
+
 #### Cursor / Windsurf
 
 Edit `.cursor/mcp.json` or `.windsurf/mcp.json`:
@@ -56,8 +64,8 @@ Edit `.cursor/mcp.json` or `.windsurf/mcp.json`:
 {
   "mcpServers": {
     "keygenix": {
-      "command": "npx",
-      "args": ["keygenix-mcp"],
+      "command": "node",
+      "args": ["/path/to/node_modules/keygenix-mcp/dist/index.js"],
       "env": {
         "KEYGENIX_API_PRIV_KEY": "...",
         "KEYGENIX_AUTH_PRIV_KEY": "...",
@@ -83,6 +91,7 @@ Add to your OpenClaw MCP config, or use the [keygenix OpenClaw Skill](https://cl
 | `list_keys` | List all keys in the wallet |
 | `get_key` | Get details of a key by keyCode |
 | `create_key` | Create a new key (mnemonic/private/secret) |
+| `import_key` | Import existing key into TEE (ECIES encrypted) |
 | `list_addresses` | List derived addresses for a key |
 | `create_address` | Derive a new address for a chain |
 | `sign_transaction` | Sign a blockchain transaction (EVM/SOL/SUI/etc.) |
@@ -116,16 +125,16 @@ Signed transaction returned
 
 ## Without MCP (CLI)
 
-For scripting, debugging, or direct integration — no AI client needed:
+For scripting, debugging, or direct integration — no AI client needed.
+The CLI lives in the [keygenix-skill](https://github.com/onezerotrace/keygenix-skill) repo:
 
 ```bash
-cd cli
+git clone https://github.com/onezerotrace/keygenix-skill
+cd keygenix-skill/cli
 npm install
-cp .env.example .env   # fill in your keys
+cp .env.example .env
 node client.js list-keys
 ```
-
-See [`cli/README.md`](cli/README.md) for full command reference.
 
 ---
 
