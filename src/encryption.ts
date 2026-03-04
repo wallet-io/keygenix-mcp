@@ -24,7 +24,7 @@ export class SecureEncryption {
   private readonly version = 1;
 
   encrypt(plaintext: string, publicKeyHex: string, ephemeralPrivateKeyHex?: string): string {
-    if (!plaintext?.trim()) throw new Error("Plaintext must be non-empty string");
+    if (!plaintext || plaintext.length === 0) throw new Error("Plaintext must be non-empty string");
     if (!/^[0-9a-f]+$/i.test(publicKeyHex)) throw new Error("Invalid public key format");
 
     const ephemeralPrivKeyBytes = ephemeralPrivateKeyHex

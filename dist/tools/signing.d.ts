@@ -71,7 +71,7 @@ export declare const signMessageTool: {
     };
 };
 export declare function handleSignTransaction(config: KeygenixConfig, args: {
-    keyCode?: string;
+    keyCode: string;
     address?: string;
     tx: string;
     chain: string;
@@ -80,7 +80,7 @@ export declare function handleSignTransaction(config: KeygenixConfig, args: {
     path?: string;
 }): Promise<unknown>;
 export declare function handleSignMessage(config: KeygenixConfig, args: {
-    keyCode?: string;
+    keyCode: string;
     address?: string;
     message: string;
     chain?: string;

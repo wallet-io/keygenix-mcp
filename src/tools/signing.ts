@@ -11,15 +11,15 @@ export const signTransactionTool = {
   inputSchema: {
     type: "object",
     properties: {
-      keyCode: { type: "string", description: "Key code (use with deriving)" },
-      address: { type: "string", description: "Specific address to sign with (alternative to keyCode+deriving)" },
+      keyCode: { type: "string", description: "Key code (required)" },
+      address: { type: "string", description: "Specific address to sign with — optional, skips HD derivation when provided" },
       tx: {
         type: "string",
         description: "Unsigned transaction. EVM: 0x-prefixed RLP hex. SOL: base58/base64/hex encoded tx.",
       },
       chain: {
         type: "string",
-        enum: ["EVM", "SOL", "SUI", "BTC", "TRX", "TON", "COSMOS"],
+        enum: ["EVM", "SOL", "SUI", "BTC", "TRX", "TON", "COSMOS", "XRP", "ADA", "APTOS"],
         description: "Target blockchain",
       },
       chainId: {
@@ -56,7 +56,7 @@ export const signMessageTool = {
       },
       chain: {
         type: "string",
-        enum: ["EVM", "SOL", "SUI", "BTC", "TRX", "TON", "COSMOS"],
+        enum: ["EVM", "SOL", "SUI", "BTC", "TRX", "TON", "COSMOS", "XRP", "ADA", "APTOS"],
         description: "Chain type — determines default curve and path. Required when address is not provided.",
       },
       path: {
@@ -71,13 +71,16 @@ export const signMessageTool = {
 // ─── Chain defaults ───────────────────────────────────────────────────────────
 
 const CHAIN_DEFAULTS: Record<string, { path: string; curve: string; deriveType: string }> = {
-  EVM:    { path: "m/44'/60'/0'/0/0",  curve: "secp256k1", deriveType: "bip32" },
-  SOL:    { path: "m/44'/501'/0'/0'",  curve: "ed25519",   deriveType: "ed25519-hd-key" },
-  SUI:    { path: "m/44'/784'/0'/0'/0'", curve: "ed25519", deriveType: "ed25519-hd-key" },
-  BTC:    { path: "m/84'/0'/0'/0/0",   curve: "secp256k1", deriveType: "bip32" },
-  TRX:    { path: "m/44'/195'/0'/0/0", curve: "secp256k1", deriveType: "bip32" },
-  TON:    { path: "m/44'/607'/0'",     curve: "ed25519",   deriveType: "ed25519-hd-key" },
-  COSMOS: { path: "m/44'/118'/0'/0/0", curve: "secp256k1", deriveType: "bip32" },
+  EVM:    { path: "m/44'/60'/0'/0/0",    curve: "secp256k1", deriveType: "bip32" },
+  SOL:    { path: "m/44'/501'/0'/0'",    curve: "ed25519",   deriveType: "ed25519-hd-key" },
+  SUI:    { path: "m/44'/784'/0'/0'/0'", curve: "ed25519",   deriveType: "ed25519-hd-key" },
+  BTC:    { path: "m/84'/0'/0'/0/0",     curve: "secp256k1", deriveType: "bip32" },
+  TRX:    { path: "m/44'/195'/0'/0/0",   curve: "secp256k1", deriveType: "bip32" },
+  TON:    { path: "m/44'/607'/0'",       curve: "ed25519",   deriveType: "ed25519-hd-key" },
+  COSMOS: { path: "m/44'/118'/0'/0/0",   curve: "secp256k1", deriveType: "bip32" },
+  XRP:    { path: "m/44'/144'/0'/0/0",   curve: "secp256k1", deriveType: "bip32" },
+  ADA:    { path: "m/1852'/1815'/0'/0/0",curve: "ed25519",   deriveType: "bip32-cardano" },
+  APTOS:  { path: "m/44'/637'/0'/0'/0'", curve: "ed25519",   deriveType: "ed25519-hd-key" },
 };
 
 // ─── Handlers ─────────────────────────────────────────────────────────────────
@@ -85,7 +88,7 @@ const CHAIN_DEFAULTS: Record<string, { path: string; curve: string; deriveType: 
 export async function handleSignTransaction(
   config: KeygenixConfig,
   args: {
-    keyCode?: string;
+    keyCode: string;
     address?: string;
     tx: string;
     chain: string;
@@ -150,7 +153,7 @@ export async function handleSignTransaction(
 export async function handleSignMessage(
   config: KeygenixConfig,
   args: {
-    keyCode?: string;
+    keyCode: string;
     address?: string;
     message: string;
     chain?: string;

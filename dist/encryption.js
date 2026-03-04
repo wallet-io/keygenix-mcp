@@ -12,7 +12,7 @@ const ENC_INFO = new TextEncoder().encode("encryption-key");
 export class SecureEncryption {
     version = 1;
     encrypt(plaintext, publicKeyHex, ephemeralPrivateKeyHex) {
-        if (!plaintext?.trim())
+        if (!plaintext || plaintext.length === 0)
             throw new Error("Plaintext must be non-empty string");
         if (!/^[0-9a-f]+$/i.test(publicKeyHex))
             throw new Error("Invalid public key format");

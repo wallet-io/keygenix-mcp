@@ -8,7 +8,7 @@
  *   KEYGENIX_AUTH_PRIV_KEY=<hex> \
  *   KEYGENIX_ORG_CODE=<org> \
  *   KEYGENIX_WALLET_CODE=<wallet> \
- *   npx keygenix-mcp
+ *   node dist/index.js
  *
  * Note: keygen tool works without env vars (local key generation only).
  */
@@ -146,7 +146,7 @@ async function main() {
 
         case "sign_transaction":
           result = await handleSignTransaction(config, args as {
-            keyCode?: string; address?: string;
+            keyCode: string; address?: string;
             tx: string; chain: string; chainId?: number;
             encoding?: string; path?: string;
           });
@@ -154,7 +154,7 @@ async function main() {
 
         case "sign_message":
           result = await handleSignMessage(config, args as {
-            keyCode?: string; address?: string;
+            keyCode: string; address?: string;
             message: string; chain?: string; path?: string;
           });
           break;

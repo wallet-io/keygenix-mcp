@@ -14,7 +14,7 @@ export declare const listKeysTool: {
                 description: string;
             };
         };
-        required: never[];
+        required: string[];
     };
 };
 export declare const getKeyTool: {

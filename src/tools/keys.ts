@@ -14,7 +14,7 @@ export const listKeysTool = {
       page: { type: "number", description: "Page number (default: 1)" },
       size: { type: "number", description: "Page size (default: 10, max: 100)" },
     },
-    required: [],
+    required: [] as string[],
   },
 };
 
