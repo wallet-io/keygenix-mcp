@@ -9,6 +9,8 @@
  *   KEYGENIX_ORG_CODE=<org> \
  *   KEYGENIX_WALLET_CODE=<wallet> \
  *   npx keygenix-mcp
+ *
+ * Note: keygen tool works without env vars (local key generation only).
  */
 
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
@@ -33,23 +35,20 @@ import {
   signTransactionTool, signMessageTool,
   handleSignTransaction, handleSignMessage,
 } from "./tools/signing.js";
+import { importKeyTool, handleImportKey } from "./tools/import.js";
 
 // ─── Load config from env ─────────────────────────────────────────────────────
 
-function loadConfig(): KeygenixConfig {
-  const missing: string[] = [];
+function loadConfig(): KeygenixConfig | null {
   const required = [
     "KEYGENIX_API_PRIV_KEY",
     "KEYGENIX_AUTH_PRIV_KEY",
     "KEYGENIX_ORG_CODE",
     "KEYGENIX_WALLET_CODE",
   ];
-  for (const key of required) {
-    if (!process.env[key]) missing.push(key);
-  }
-  if (missing.length > 0) {
-    throw new Error(`Missing required environment variables: ${missing.join(", ")}`);
-  }
+  const missing = required.filter((k) => !process.env[k]);
+  if (missing.length > 0) return null;
+
   return {
     apiAuthPrivKey: process.env.KEYGENIX_API_PRIV_KEY!,
     authPrivKey:    process.env.KEYGENIX_AUTH_PRIV_KEY!,
@@ -65,6 +64,7 @@ const ALL_TOOLS = [
   listKeysTool,
   getKeyTool,
   createKeyTool,
+  importKeyTool,
   listAddressesTool,
   createAddressTool,
   signTransactionTool,
@@ -74,12 +74,12 @@ const ALL_TOOLS = [
 // ─── Server ───────────────────────────────────────────────────────────────────
 
 async function main() {
-  let config: KeygenixConfig;
-  try {
-    config = loadConfig();
-  } catch (err) {
-    console.error(`[keygenix-mcp] ${(err as Error).message}`);
-    process.exit(1);
+  const config = loadConfig();
+  if (!config) {
+    console.error(
+      "[keygenix-mcp] Warning: Missing env vars (KEYGENIX_API_PRIV_KEY, KEYGENIX_AUTH_PRIV_KEY, " +
+      "KEYGENIX_ORG_CODE, KEYGENIX_WALLET_CODE). Only 'keygen' tool will work."
+    );
   }
 
   const server = new Server(
@@ -87,7 +87,7 @@ async function main() {
     { capabilities: { tools: {} } }
   );
 
-  // List tools
+  // List tools — always return all tools (let AI know what's available)
   server.setRequestHandler(ListToolsRequestSchema, async () => ({
     tools: ALL_TOOLS,
   }));
@@ -99,11 +99,21 @@ async function main() {
     try {
       let result: unknown;
 
-      switch (name) {
-        case "keygen":
-          result = handleKeygen();
-          break;
+      // keygen: local only, no config needed
+      if (name === "keygen") {
+        result = handleKeygen();
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      }
 
+      // All other tools require config
+      if (!config) {
+        throw new Error(
+          "API credentials not configured. Set KEYGENIX_API_PRIV_KEY, KEYGENIX_AUTH_PRIV_KEY, " +
+          "KEYGENIX_ORG_CODE, and KEYGENIX_WALLET_CODE environment variables."
+        );
+      }
+
+      switch (name) {
         case "list_keys":
           result = await handleListKeys(config, args as { page?: number; size?: number });
           break;
@@ -114,6 +124,13 @@ async function main() {
 
         case "create_key":
           result = await handleCreateKey(config, args as { keyType: string; chains?: string[] });
+          break;
+
+        case "import_key":
+          result = await handleImportKey(config, args as {
+            keyType: string; mnemonic?: string;
+            privateKey?: string; curve?: string; chains?: string[];
+          });
           break;
 
         case "list_addresses":

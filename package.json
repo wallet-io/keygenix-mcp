@@ -4,6 +4,9 @@
   "description": "Keygenix MCP Server — Non-custodial TEE key management & signing for AI agents",
   "type": "module",
   "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "bin": {
     "keygenix-mcp": "dist/index.js"
   },

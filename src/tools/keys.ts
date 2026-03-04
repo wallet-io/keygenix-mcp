@@ -1,7 +1,6 @@
 import { KeygenixConfig, apiCall, walletUrl } from "../api-client.js";
-import { bytesToHex } from "@noble/hashes/utils.js";
+import { bytesToHex, hexToBytes } from "@noble/hashes/utils.js";
 import { secp256k1 } from "@noble/curves/secp256k1.js";
-import { hexToBytes } from "@noble/hashes/utils.js";
 
 // ─── Tool definitions ─────────────────────────────────────────────────────────
 
