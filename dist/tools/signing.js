@@ -17,7 +17,7 @@ export const signTransactionTool = {
             chain: {
                 type: "string",
                 enum: ["EVM", "SOL", "SUI", "BTC", "TRX", "TON", "COSMOS", "XRP", "ADA", "APTOS"],
-                description: "Target blockchain",
+                description: "Target blockchain. Required for mnemonic keys (enables HD derivation). Omit for private/secret key types.",
             },
             chainId: {
                 type: "number",
@@ -33,7 +33,7 @@ export const signTransactionTool = {
                 description: "BIP44 path (default: m/44'/60'/0'/0/0 for EVM). Only used with keyCode.",
             },
         },
-        required: ["keyCode", "tx", "chain"],
+        required: ["keyCode", "tx"],
     },
 };
 export const signMessageTool = {
@@ -106,17 +106,18 @@ export async function handleSignTransaction(config, args) {
         return apiCall(config, "POST", walletUrl(config, `/keys/${args.keyCode}/addresses/${args.address}/sign_transaction`), { authSignature, timestamp, txBundle });
     }
     else {
-        const defaults = CHAIN_DEFAULTS[args.chain] ?? CHAIN_DEFAULTS.EVM;
-        return apiCall(config, "POST", walletUrl(config, `/keys/${args.keyCode}/sign_transaction`), {
-            authSignature,
-            timestamp,
-            txBundle,
-            deriving: {
+        const body = { authSignature, timestamp, txBundle };
+        // Only send deriving when chain or path is provided (mnemonic keys).
+        // Private/secret keys: omit chain and path → no deriving sent.
+        if (args.chain || args.path) {
+            const defaults = CHAIN_DEFAULTS[args.chain ?? "EVM"] ?? CHAIN_DEFAULTS.EVM;
+            body.deriving = {
                 curve: defaults.curve,
                 path: args.path ?? defaults.path,
                 deriveType: defaults.deriveType,
-            },
-        });
+            };
+        }
+        return apiCall(config, "POST", walletUrl(config, `/keys/${args.keyCode}/sign_transaction`), body);
     }
 }
 export async function handleSignMessage(config, args) {
@@ -130,17 +131,18 @@ export async function handleSignMessage(config, args) {
         return apiCall(config, "POST", walletUrl(config, `/keys/${args.keyCode}/addresses/${args.address}/sign_message`), { authSignature, timestamp, message: args.message });
     }
     else {
-        const defaults = CHAIN_DEFAULTS[args.chain ?? "EVM"] ?? CHAIN_DEFAULTS.EVM;
-        return apiCall(config, "POST", walletUrl(config, `/keys/${args.keyCode}/sign_message`), {
-            authSignature,
-            timestamp,
-            message: args.message,
-            deriving: {
+        const body = { authSignature, timestamp, message: args.message };
+        // Only send deriving when chain or path is provided (mnemonic keys).
+        // Private/secret keys: omit chain and path → no deriving sent.
+        if (args.chain || args.path) {
+            const defaults = CHAIN_DEFAULTS[args.chain ?? "EVM"] ?? CHAIN_DEFAULTS.EVM;
+            body.deriving = {
                 curve: defaults.curve,
                 path: args.path ?? defaults.path,
                 deriveType: defaults.deriveType,
-            },
-        });
+            };
+        }
+        return apiCall(config, "POST", walletUrl(config, `/keys/${args.keyCode}/sign_message`), body);
     }
 }
 //# sourceMappingURL=signing.js.map
