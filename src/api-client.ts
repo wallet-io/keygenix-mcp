@@ -26,14 +26,14 @@ function signRequest(method: string, url: string, body: object, privKeyHex: stri
   const privKeyBytes = hexToBytes(privKeyHex);
   const pubKey = bytesToHex(secp256k1.getPublicKey(privKeyBytes));
   const sig = secp256k1.sign(sha256(new TextEncoder().encode(message)), privKeyBytes);
-  return { pubKey, sign: bytesToHex(sig), timestamp };
+  return { pubKey, sign: bytesToHex(sig.toCompactRawBytes()), timestamp };
 }
 
 /** Build authSignature for sensitive operations (sign_transaction, sign_message, export) */
 export function buildAuthSignature(authPrivKeyHex: string, content: string, timestamp: number): string {
   const msg = sha256(new TextEncoder().encode(`${content}|${timestamp}`));
   const sig = secp256k1.sign(msg, hexToBytes(authPrivKeyHex));
-  return bytesToHex(sig);
+  return bytesToHex(sig.toCompactRawBytes());
 }
 
 // ─── HTTP client ──────────────────────────────────────────────────────────────

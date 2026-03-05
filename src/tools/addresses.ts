@@ -99,19 +99,26 @@ export async function handleCreateAddress(
     deriveType?: string;
   }
 ) {
+  // 只有显式传了 path/curve/deriveType 时才发 deriving（private keyType 不支持 deriving）
+  const hasCustomDeriving = args.path || args.curve || args.deriveType;
   const defaults = ADDRESS_DEFAULTS[args.addressType] ?? {
     curve: "secp256k1",
     path: "m/44'/60'/0'/0/0",
     deriveType: "bip32",
   };
 
-  return apiCall(config, "POST", walletUrl(config, `/keys/${args.keyCode}/addresses`), {
-    deriving: {
+  const body: Record<string, unknown> = {
+    addressType: args.addressType,
+    getOrCreate: true,
+  };
+
+  if (hasCustomDeriving) {
+    body.deriving = {
       curve: args.curve ?? defaults.curve,
       path: args.path ?? defaults.path,
       deriveType: args.deriveType ?? defaults.deriveType,
-    },
-    addressType: args.addressType,
-    getOrCreate: true,
-  });
+    };
+  }
+
+  return apiCall(config, "POST", walletUrl(config, `/keys/${args.keyCode}/addresses`), body);
 }
